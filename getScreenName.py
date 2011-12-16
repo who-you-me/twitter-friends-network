@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# myFriendsƒe[ƒuƒ‹‚©‚çfriends‚Ìid‚ğæ‚èo‚µCscreen_name‚ğæ“¾
+# myFriendsãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰friendsã®idã‚’å–ã‚Šå‡ºã—ï¼Œscreen_nameã‚’å–å¾—
 
 import json
 import urllib
@@ -23,31 +23,31 @@ import urllib
 import MySQLdb
 import oauth2 as oauth
 
-con = MySQLdb.connect(user=USRE, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
+con = MySQLdb.connect(user=USER, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
 cur = con.cursor()
 
-# idæ‚èo‚·
+# idå–ã‚Šå‡ºã™
 cur.execute("SELECT target FROM myFriends")
 ids = [id[0] for id in cur.fetchall()]
 
-# OauthƒNƒ‰ƒCƒAƒ“ƒg‚ğì¬
+# Oauthã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚’ä½œæˆ
 consumer = oauth.Consumer(key=YOUR_APP_KEY, secret=YOUR_APP_SECRET)
 token = oauth.Token(key=YOUR_TOKEN_KEY, secret=YOUR_TOKEN_SECRET)
 client = oauth.Client(consumer, token)
 
-# ƒGƒ“ƒhƒ|ƒCƒ“ƒgURL
+# ã‚¨ãƒ³ãƒ‰ãƒã‚¤ãƒ³ãƒˆURL
 url = 'http://api.twitter.com/1/users/lookup.json'
 
 while ids:
-    # id‚ğ100ŒÂæ‚èo‚µƒJƒ“ƒ}‚ÅŒ‹‡‚·‚é
+    # idã‚’100å€‹å–ã‚Šå‡ºã—ã‚«ãƒ³ãƒã§çµåˆã™ã‚‹
     params = {'user_id': ','.join([str(id) for id in ids[:100]])}
     del ids[:100]
     
-    # OauthƒNƒ‰ƒCƒAƒ“ƒg‚©‚çAPI‚ÉÚ‘±Dcontent‚ğæ‚èo‚·
+    # Oauthã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰APIã«æ¥ç¶šï¼contentã‚’å–ã‚Šå‡ºã™
     res = client.request(url+'?'+urllib.urlencode(params), 'GET')
     content = json.loads(res[1])
     
-    # screen_name‚ğmyFrinedsƒe[ƒuƒ‹‚É“ü‚ê‚é
+    # screen_nameã‚’myFrinedsãƒ†ãƒ¼ãƒ–ãƒ«ã«å…¥ã‚Œã‚‹
     for c in content:
         print c['id'], c['screen_name']
         sql = "UPDATE myFriends SET screen_name = '%s' WHERE target = %d" % (c['screen_name'], c['id'])

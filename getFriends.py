@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# friends‚Ìfriends‚ğæ“¾‚·‚é
+# friendsã®friendsã‚’å–å¾—ã™ã‚‹
 
 import json
 import urllib
@@ -23,49 +23,49 @@ import urllib
 import MySQLdb
 import oauth2 as oauth
 
-con = MySQLdb.connect(user=USRE, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
+con = MySQLdb.connect(user=USER, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
 cur = con.cursor()
 
-# idæ‚èo‚·
+# idå–ã‚Šå‡ºã™
 cur.execute("SELECT target FROM myFriends WHERE ended = 0")
 ids = [id[0] for id in cur.fetchall()]
 
-# OauthƒNƒ‰ƒCƒAƒ“ƒg‚ğì¬
+# Oauthã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚’ä½œæˆ
 consumer = oauth.Consumer(key=YOUR_APP_KEY, secret=YOUR_APP_SECRET)
 token = oauth.Token(key=YOUR_TOKEN_KEY, secret=YOUR_TOKEN_SECRET)
 client = oauth.Client(consumer, token)
 
-# ƒGƒ“ƒhƒ|ƒCƒ“ƒgURL
+# ã‚¨ãƒ³ãƒ‰ãƒã‚¤ãƒ³ãƒˆURL
 url = 'http://api.twitter.com/1/friends/ids.json'
 
 for id in ids:
     print id
     params = {'user_id': id}
-    cursor = -1 # cursor‰Šú‰»
+    cursor = -1 # cursoråˆæœŸåŒ–
     targets = []
     
-    # cursor‚ªƒ[ƒ‚É‚È‚é‚Ü‚ÅŒJ‚è•Ô‚·iAPI‚Ìd—l‚ğQÆj
+    # cursorãŒã‚¼ãƒ­ã«ãªã‚‹ã¾ã§ç¹°ã‚Šè¿”ã™ï¼ˆAPIã®ä»•æ§˜ã‚’å‚ç…§ï¼‰
     while cursor:
         params['cursor'] = cursor
-        # OauthƒNƒ‰ƒCƒAƒ“ƒg‚©‚çAPI‚ÉÚ‘±
+        # Oauthã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰APIã«æ¥ç¶š
         res = client.request(url+'?'+urllib.urlencode(params), 'GET')
         
-        # ƒXƒe[ƒ^ƒX400”Ô‘ä‚È‚ç”ò‚Î‚·
+        # ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹400ç•ªå°ãªã‚‰é£›ã°ã™
         if str(res[0].status).startswith('40'):
             break
         
-        # content‚ğæ‚èo‚µ‚Äid‚ğtargets‚É’Ç‰Á
+        # contentã‚’å–ã‚Šå‡ºã—ã¦idã‚’targetsã«è¿½åŠ 
         content = json.loads(res[1])
         targets += content[u'ids']
         cursor = content[u'next_cursor']
     
     print len(targets)
-    # æ“¾‚µ‚½id‚ğƒtƒHƒ[Œ³id‚Æ‚Æ‚à‚Éfrinedsƒe[ƒuƒ‹‚É“ü‚ê‚é
+    # å–å¾—ã—ãŸidã‚’ãƒ•ã‚©ãƒ­ãƒ¼å…ƒidã¨ã¨ã‚‚ã«frinedsãƒ†ãƒ¼ãƒ–ãƒ«ã«å…¥ã‚Œã‚‹
     for target in targets:
         sql = "INSERT INTO friends VALUES (%d, %d)" % (id, target)
         cur.execute(sql)
     
-    # I—¹ƒtƒ‰ƒO1‚É
+    # çµ‚äº†ãƒ•ãƒ©ã‚°1ã«
     if targets:
         cur.execute("UPDATE myFriends SET ended = 1 WHERE target = %d" % id)
     con.commit()

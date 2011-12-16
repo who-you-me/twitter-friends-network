@@ -15,36 +15,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# �l�b�g���[�N�`��
+# ネットワーク描画
 
 import matplotlib.pyplot as plt
 import MySQLdb
 import networkx as nx
 
-con = MySQLdb.connect(user=USRE, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
+con = MySQLdb.connect(user=USER, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
 cur = con.cursor()
 
-# Twitter��Directed Graph
+# TwitterはDirected Graph
 g = nx.DiGraph()
 
-# id��screen_name�Ή��t��������
+# idとscreen_name対応付けた辞書
 cur.execute("SELECT target, screen_name FROM myFriends")
 ids = {}
 for id in cur.fetchall():
     ids[id[0]] = id[1]
 
-# friends���m�̊֌W�݂̂����o���ăO���t�ɒǉ�
+# friends同士の関係のみを取り出してグラフに追加
 cur.execute("SELECT * FROM friends")
 for edge in cur.fetchall():
     if edge[1] in ids:
         g.add_edge(ids[edge[0]], ids[edge[1]])
 
-# �m�[�h�̑傫����������ɔ�Ⴓ����
+# ノードの大きさを入次数に比例させる
 node_size = {}
 for v in g:
     node_size[v] = float(g.in_degree(v)) * 2 + 2
 
-# �����������ȏゾ��screen_name�\���c�݂����ȏ���
+# 入次数いくつ以上だとscreen_name表示…みたいな処理
 """
 labels = {}
 for name in ids.values():
@@ -54,7 +54,7 @@ for name in ids.values():
         labels[name] = ''
 """
 
-# �`��̍ۂɂ�Undirected Graph�ɕϊ�
+# 描画の際にはUndirected Graphに変換
 g = nx.Graph(g)
 nx.draw(g, pos=nx.spring_layout(g), with_labels=False, node_size=[node_size[v] for v in g],
         node_color='red', width=0.1, alpha=0.7)

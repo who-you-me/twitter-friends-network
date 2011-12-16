@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Twitter API‚©‚ç©•ª‚Ìfriends‚ğæ“¾‚·‚é
+# Twitter APIã‹ã‚‰è‡ªåˆ†ã®friendsã‚’å–å¾—ã™ã‚‹
 
 import json
 import urllib
@@ -23,22 +23,22 @@ import urllib
 import MySQLdb
 import oauth2 as oauth
 
-# OauthƒNƒ‰ƒCƒAƒ“ƒg‚ğì¬
+# Oauthã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚’ä½œæˆ
 consumer = oauth.Consumer(key=YOUR_APP_KEY, secret=YOUR_APP_SECRET)
 token = oauth.Token(key=YOUR_TOKEN_KEY, secret=YOUR_TOKEN_SECRET)
 client = oauth.Client(consumer, token)
 
-# ƒGƒ“ƒhƒ|ƒCƒ“ƒgURL‚Æƒpƒ‰ƒ[ƒ^
+# ã‚¨ãƒ³ãƒ‰ãƒã‚¤ãƒ³ãƒˆURLã¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 url = 'http://api.twitter.com/1/friends/ids.json'
 params = {}
 
-# OauthƒNƒ‰ƒCƒAƒ“ƒg‚©‚çAPI‚ÉÚ‘±Dcontent‚ğæ‚èo‚·
+# Oauthã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰APIã«æ¥ç¶šï¼contentã‚’å–ã‚Šå‡ºã™
 res = client.request(url+'?'+urllib.urlencode(params), 'GET')
 content = json.loads(res[1])
 
 """
-MySQLã‚ÉtwitterNetworkƒf[ƒ^ƒx[ƒX‚ğì¬Ï‚İ‚Æ‚·‚éD
-ƒe[ƒuƒ‹‚Í myFriends ‚Æ friends ‚Ì‚Q‚ÂD
+MySQLä¸Šã«twitterNetworkãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’ä½œæˆæ¸ˆã¿ã¨ã™ã‚‹ï¼
+ãƒ†ãƒ¼ãƒ–ãƒ«ã¯ myFriends ã¨ friends ã®ï¼’ã¤ï¼
 
 myFriends
 +-------------+-------------+------+-----+---------+-------+
@@ -58,10 +58,10 @@ friends
 +--------+---------+------+-----+---------+-------+
 """
 
-con = MySQLdb.connect(user=USRE, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
+con = MySQLdb.connect(user=USER, passwd=PASSWD, db='twitterNetwork', charset='UTF8')
 cur = con.cursor()
 
-# myFriendsƒe[ƒuƒ‹‚Éfriends‚Ìid“ü‚ê‚é
+# myFriendsãƒ†ãƒ¼ãƒ–ãƒ«ã«friendsã®idå…¥ã‚Œã‚‹
 for id in content[u'ids']:
     print id
     sql = "INSERT INTO myFriends (target) VALUES (%d)" % id
