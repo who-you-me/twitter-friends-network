@@ -1,0 +1,24 @@
+必要ライブラリ
+-tweepy
+  https://github.com/tweepy/tweepy/
+-matplotlib
+  http://matplotlib.sourceforge.net/
+-networkx
+  http://networkx.lanl.gov/
+-pandas
+  http://pandas.pydata.org/
+
+構成ファイル
+-twToken.py
+  Twitter APIにアクセスするためのconsumer key, cousumer secret, access token key, access token secretを格納
+
+-getFriensNetwork.py
+  apiにアクセスしてエゴネットワークを取得
+  （API制限に引っかかって停止した場合は、間を置いて繰り返し実行してください）
+
+-drawNetwork.py
+  エゴネットワークを描画
+
+-centralities.py
+  次数、入次、出次、近接、隣接、固有ベクトル中心性を計算してcsvで書き出し
+  （諸事情によりdrawNetwork.pyを先に実行してください）
